@@ -3,10 +3,13 @@
 Canary SRS — Retention Cleanup CLI Script (FR-42)
 Run periodically (e.g. daily cron job or container task) to purge expired audits.
 """
-import sys
-import logging
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+import logging
+import sys
+
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
+)
 logger = logging.getLogger("canary-cleanup")
 
 try:
@@ -14,7 +17,10 @@ try:
 except ImportError:
     # If run from repository root, add backend to sys.path
     import os
-    sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "backend")))
+
+    sys.path.insert(
+        0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "backend"))
+    )
     from app.jobs.cleanup import run_retention_cleanup
 
 
