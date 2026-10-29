@@ -34,12 +34,12 @@ Authoritative mapping of Functional Requirements (FR-1 through FR-46) to impleme
 | **FR-28** | Skip speed analysis gracefully when timing data is missing | `backend/app/checks/speed.py` | Background Engine | `backend/tests/unit/test_speed.py` | Passed |
 | **FR-29** | Unified deterministic evidence confidence rules (High, Medium, Low) | `backend/app/checks/base.py` | Background Engine | `backend/tests/unit/test_confidence.py` | Passed |
 | **FR-30** | Prominent limitation notices: "Evidence for review, not proof" | `frontend/src/features/results/ResultSummary.tsx`| `/results/:secret` | `frontend/tests/ResultSummary.test.tsx`| In Progress |
-| **FR-31** | Durable database-backed audit job lifecycle states | `backend/app/models/audit.py` | `GET /api/v1/audits/{secret}/status`| `backend/tests/integration/test_job.py` | In Progress |
-| **FR-32** | Asynchronous worker process with Redis and In-Memory fallback | `backend/app/jobs/` | Worker | `backend/tests/integration/test_job.py` | In Progress |
-| **FR-33** | Bounded retries, backoff, and 20-minute execution timeout | `backend/app/jobs/runner.py` | Worker | `backend/tests/integration/test_job.py` | In Progress |
-| **FR-34** | Idempotent stage execution and partial result preservation | `backend/app/jobs/runner.py` | Worker | `backend/tests/integration/test_job.py` | In Progress |
-| **FR-35** | Secret URL generation with 256-bit cryptographic entropy | `backend/app/core/security.py` | `POST /api/v1/audits` | `backend/tests/security/test_security.py` | In Progress |
-| **FR-36** | Store only SHA-256 hash of audit secret tokens in database | `backend/app/models/audit.py` | `POST /api/v1/audits` | `backend/tests/security/test_security.py` | In Progress |
+| **FR-31** | Durable database-backed audit job lifecycle states | `backend/app/models/audit.py` | `GET /api/v1/audits/{secret}/status`| `backend/tests/integration/test_job.py` | Passed |
+| **FR-32** | Asynchronous worker process with Redis and In-Memory fallback | `backend/app/jobs/` | Worker | `backend/tests/integration/test_job.py` | Passed |
+| **FR-33** | Bounded retries, backoff, and 20-minute execution timeout | `backend/app/jobs/runner.py` | Worker | `backend/tests/integration/test_job.py` | Passed |
+| **FR-34** | Idempotent stage execution and partial result preservation | `backend/app/jobs/runner.py` | Worker | `backend/tests/integration/test_job.py` | Passed |
+| **FR-35** | Secret URL generation with 256-bit cryptographic entropy | `backend/app/core/security.py` | `POST /api/v1/audits` | `backend/tests/security/test_security.py` | Passed |
+| **FR-36** | Store only SHA-256 hash of audit secret tokens in database | `backend/app/models/audit.py` | `POST /api/v1/audits` | `backend/tests/security/test_security.py` | Passed |
 | **FR-37** | Audit results UI with summary cards, worker filters, and findings | `frontend/src/features/results/` | `/results/:secret` | `frontend/tests/ResultsView.test.tsx` | In Progress |
 | **FR-38** | Self-contained offline HTML report generation (inline CSS) | `backend/app/reporting/html_export.py` | `GET /api/v1/audits/{secret}/export.html`| `backend/tests/unit/test_reporting.py` | In Progress |
 | **FR-39** | Formula-injection protected CSV export | `backend/app/reporting/csv_export.py` | `GET /api/v1/audits/{secret}/export.csv`| `backend/tests/security/test_security.py` | In Progress |
