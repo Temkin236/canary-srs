@@ -4,15 +4,20 @@ import uuid
 from typing import Optional
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from fastapi.responses import HTMLResponse, Response
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.core.security import generate_secret_token, hash_secret_token, sanitize_filename
 from app.db.session import get_db
 from app.jobs.queue import enqueue_audit_job
-from app.models.audit import Audit, AuditAnswer, JobState, Marker
+from app.models.audit import Audit, AuditAnswer, CheckResult, Finding, JobState, Marker
+from app.reporting.csv_export import generate_csv_report
+from app.reporting.html_export import generate_html_report
+from app.reporting.json_export import generate_json_report
 from app.schemas.audit import AuditCreateResponse, AuditStatusResponse
 from app.schemas.dataset import DatasetValidationResponse
+from app.services.audit import delete_audit_permanently
 from app.services.dataset import validate_and_parse_dataset
 from app.services.storage import save_uploaded_file
 
@@ -227,3 +232,119 @@ def get_audit_status_endpoint(
         expires_at=audit.expires_at,
         summary_metrics=audit.summary_metrics or {},
     )
+
+
+@router.get("/{secret_token}/report")
+def get_audit_report_endpoint(
+    secret_token: str,
+    db: Session = Depends(get_db),
+):
+    """
+    Retrieves full audit report including executive summary, check status, and findings (FR-37).
+    """
+    audit = _get_authenticated_audit(secret_token, db)
+    findings = db.query(Finding).filter(Finding.audit_id == audit.id).all()
+    check_results = db.query(CheckResult).filter(CheckResult.audit_id == audit.id).all()
+
+    return generate_json_report(audit, findings, check_results)
+
+
+@router.get("/{secret_token}/export.html", response_class=HTMLResponse)
+def export_html_report_endpoint(
+    secret_token: str,
+    db: Session = Depends(get_db),
+):
+    """
+    Exports a 100% self-contained offline HTML audit report with inline CSS (FR-38).
+    """
+    audit = _get_authenticated_audit(secret_token, db)
+    findings = db.query(Finding).filter(Finding.audit_id == audit.id).all()
+    check_results = db.query(CheckResult).filter(CheckResult.audit_id == audit.id).all()
+
+    html_content = generate_html_report(audit, findings, check_results)
+    return HTMLResponse(
+        content=html_content,
+        headers={"Content-Disposition": f"attachment; filename=canary_report_{audit.id[:8]}.html"},
+    )
+
+
+@router.get("/{secret_token}/export.csv")
+def export_csv_report_endpoint(
+    secret_token: str,
+    db: Session = Depends(get_db),
+):
+    """
+    Exports formula-injection protected CSV of audit findings (FR-39).
+    """
+    audit = _get_authenticated_audit(secret_token, db)
+    findings = db.query(Finding).filter(Finding.audit_id == audit.id).all()
+
+    csv_data = generate_csv_report(audit, findings)
+    return Response(
+        content=csv_data,
+        media_type="text/csv",
+        headers={"Content-Disposition": f"attachment; filename=canary_findings_{audit.id[:8]}.csv"},
+    )
+
+
+@router.get("/{secret_token}/export.json")
+def export_json_report_endpoint(
+    secret_token: str,
+    db: Session = Depends(get_db),
+):
+    """
+    Exports machine-readable JSON of audit metadata and findings (FR-40).
+    """
+    audit = _get_authenticated_audit(secret_token, db)
+    findings = db.query(Finding).filter(Finding.audit_id == audit.id).all()
+    check_results = db.query(CheckResult).filter(CheckResult.audit_id == audit.id).all()
+
+    report_dict = generate_json_report(audit, findings, check_results)
+    return Response(
+        content=json.dumps(report_dict, indent=2),
+        media_type="application/json",
+        headers={"Content-Disposition": f"attachment; filename=canary_audit_{audit.id[:8]}.json"},
+    )
+
+
+@router.delete("/{secret_token}")
+def delete_audit_endpoint(
+    secret_token: str,
+    db: Session = Depends(get_db),
+):
+    """
+    'Delete Now' immediate purge action cascading complete deletion of audit data (FR-41).
+    """
+    audit = _get_authenticated_audit(secret_token, db)
+    success = delete_audit_permanently(audit, db)
+    if not success:
+        raise HTTPException(status_code=500, detail="Failed to purge audit data.")
+
+    return {"message": "Audit and all associated data permanently deleted."}
+
+
+def _get_authenticated_audit(secret_token: str, db: Session) -> Audit:
+    token_hash = hash_secret_token(secret_token)
+    audit = db.query(Audit).filter(Audit.token_hash == token_hash).first()
+
+    if not audit:
+        raise HTTPException(
+            status_code=404,
+            detail="Audit not found or secret link is invalid.",
+        )
+
+    now_utc = datetime.datetime.now(datetime.timezone.utc)
+    audit_exp = audit.expires_at
+    if audit_exp.tzinfo is None:
+        audit_exp = audit_exp.replace(tzinfo=datetime.timezone.utc)
+
+    if now_utc > audit_exp:
+        raise HTTPException(
+            status_code=410,
+            detail=(
+                "This audit has expired and its data has been purged "
+                "under the 7-day retention policy."
+            ),
+        )
+
+    return audit

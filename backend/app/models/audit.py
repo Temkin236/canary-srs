@@ -147,6 +147,11 @@ class Finding(Base):
     evidence_offsets = Column(JSON, nullable=True)  # [start, end]
     numerical_measurements = Column(JSON, default=dict, nullable=False)
     related_answer_ids = Column(JSON, default=list, nullable=False)
+    limitations = Column(
+        Text,
+        default="Evidence for human review only; does not prove cheating.",
+        nullable=False,
+    )
     created_at = Column(DateTime, default=get_utc_now, nullable=False)
 
     audit = relationship("Audit", back_populates="findings")
