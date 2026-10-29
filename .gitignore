@@ -46,8 +46,10 @@ frontend/coverage/
 *.sqlite
 *.sqlite3
 *.db
-backend/app/canary.db
-data/
+data/*
+!data/accuracy/
+data/accuracy/*
+!data/accuracy/latest_evaluation.json
 
 # Environment files and credentials
 .env

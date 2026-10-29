@@ -33,7 +33,7 @@ Authoritative mapping of Functional Requirements (FR-1 through FR-46) to impleme
 | **FR-27** | Speed plausibility check based on typing velocity threshold | `backend/app/checks/speed.py` | Background Engine | `backend/tests/unit/test_speed.py` | Passed |
 | **FR-28** | Skip speed analysis gracefully when timing data is missing | `backend/app/checks/speed.py` | Background Engine | `backend/tests/unit/test_speed.py` | Passed |
 | **FR-29** | Unified deterministic evidence confidence rules (High, Medium, Low) | `backend/app/checks/base.py` | Background Engine | `backend/tests/unit/test_confidence.py` | Passed |
-| **FR-30** | Prominent limitation notices: "Evidence for review, not proof" | `frontend/src/features/results/ResultSummary.tsx`| `/results/:secret` | `frontend/tests/ResultSummary.test.tsx`| In Progress |
+| **FR-30** | Prominent limitation notices: "Evidence for review, not proof" | `frontend/src/features/results/ResultSummary.tsx`| `/results/:secret` | `frontend/tests/ResultSummary.test.tsx`| Passed |
 | **FR-31** | Durable database-backed audit job lifecycle states | `backend/app/models/audit.py` | `GET /api/v1/audits/{secret}/status`| `backend/tests/integration/test_job.py` | Passed |
 | **FR-32** | Asynchronous worker process with Redis and In-Memory fallback | `backend/app/jobs/` | Worker | `backend/tests/integration/test_job.py` | Passed |
 | **FR-33** | Bounded retries, backoff, and 20-minute execution timeout | `backend/app/jobs/runner.py` | Worker | `backend/tests/integration/test_job.py` | Passed |
@@ -46,7 +46,7 @@ Authoritative mapping of Functional Requirements (FR-1 through FR-46) to impleme
 | **FR-40** | Machine-readable JSON export of findings and metadata | `backend/app/reporting/json_export.py`| `GET /api/v1/audits/{secret}/export.json`| `backend/tests/unit/test_reporting.py` | Passed |
 | **FR-41** | "Delete Now" action cascading immediate purge of audit data | `backend/app/services/audit.py` | `DELETE /api/v1/audits/{secret}` | `backend/tests/unit/test_cleanup.py` | Passed |
 | **FR-42** | Automatic 7-day data retention cleanup job | `backend/app/jobs/cleanup.py` | Cron / Worker | `backend/tests/unit/test_cleanup.py` | Passed |
-| **FR-43** | Human-labeled baseline sample calibration with Wilson interval | `backend/app/services/calibration.py` | `POST /api/v1/audits` | `backend/tests/unit/test_calibration.py` | In Progress |
-| **FR-44** | Reproducible evaluation CLI script (`scripts/evaluate.py`) | `scripts/evaluate.py` | CLI Command | `backend/tests/integration/test_eval.py` | In Progress |
-| **FR-45** | Real measured Accuracy page loading latest evaluation artifact | `frontend/src/pages/AccuracyPage.tsx` | `/accuracy` | `frontend/tests/AccuracyPage.test.tsx` | In Progress |
+| **FR-43** | Human-labeled baseline sample calibration with Wilson interval | `backend/app/services/calibration.py` | `POST /api/v1/audits` | `backend/tests/unit/test_calibration.py` | Passed |
+| **FR-44** | Reproducible evaluation CLI script (`scripts/evaluate.py`) | `scripts/evaluate.py` | CLI Command | `backend/tests/integration/test_eval.py` | Passed |
+| **FR-45** | Real measured Accuracy page loading latest evaluation artifact | `frontend/src/pages/AccuracyPage.tsx` | `/accuracy` | `frontend/tests/AccuracyPage.test.tsx` | Passed |
 | **FR-46** | Full website navigation: Home, How it works, Prepare, Audit, Accuracy, Privacy, Terms, Contact | `frontend/src/pages/` | All Routes | `frontend/tests/Navigation.test.tsx` | In Progress |
