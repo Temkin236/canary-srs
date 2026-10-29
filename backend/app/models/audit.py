@@ -17,6 +17,10 @@ from sqlalchemy.orm import relationship
 from app.db.session import Base
 
 
+def get_utc_now() -> datetime.datetime:
+    return datetime.datetime.now(datetime.timezone.utc)
+
+
 class Audit(Base):
     __tablename__ = "audits"
 
@@ -29,7 +33,7 @@ class Audit(Base):
     consent_external_ai = Column(Boolean, default=False, nullable=False)
     config = Column(JSON, default=dict, nullable=False)
     summary_metrics = Column(JSON, default=dict, nullable=False)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=get_utc_now, nullable=False)
     completed_at = Column(DateTime, nullable=True)
     expires_at = Column(DateTime, nullable=False, index=True)
 
@@ -83,7 +87,7 @@ class ReferenceAnswer(Base):
     model_name = Column(String(128), nullable=False)
     reference_text = Column(Text, nullable=False)
     generation_settings = Column(JSON, default=dict, nullable=False)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=get_utc_now, nullable=False)
 
     audit = relationship("Audit", back_populates="reference_answers")
 
@@ -99,7 +103,7 @@ class Marker(Base):
     marker_token = Column(String(128), nullable=False, index=True)
     hiding_method = Column(String(64), nullable=False)  # zero_width, prompt_embedded
     prompt_template = Column(Text, nullable=True)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=get_utc_now, nullable=False)
 
     audit = relationship("Audit", back_populates="markers")
 
@@ -143,7 +147,7 @@ class Finding(Base):
     evidence_offsets = Column(JSON, nullable=True)  # [start, end]
     numerical_measurements = Column(JSON, default=dict, nullable=False)
     related_answer_ids = Column(JSON, default=list, nullable=False)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=get_utc_now, nullable=False)
 
     audit = relationship("Audit", back_populates="findings")
     audit_answer = relationship("AuditAnswer", back_populates="findings")
@@ -167,7 +171,7 @@ class CalibrationRun(Base):
     ci_upper = Column(Float, nullable=False)
     ci_method = Column(String(32), default="wilson", nullable=False)
     insufficient_data_reason = Column(String(256), nullable=True)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=get_utc_now, nullable=False)
 
     audit = relationship("Audit", back_populates="calibration_run")
 
@@ -189,7 +193,7 @@ class JobState(Base):
     retry_count = Column(Integer, default=0, nullable=False)
     max_retries = Column(Integer, default=3, nullable=False)
     started_at = Column(DateTime, nullable=True)
-    last_heartbeat = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
+    last_heartbeat = Column(DateTime, default=get_utc_now, nullable=False)
     error_log = Column(Text, nullable=True)
 
     audit = relationship("Audit", back_populates="job_state")
@@ -213,4 +217,4 @@ class EvaluationMetadata(Base):
     fpr_ci_upper = Column(Float, nullable=False)
     ci_method = Column(String(32), default="wilson", nullable=False)
     configuration = Column(JSON, default=dict, nullable=False)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=get_utc_now, nullable=False)

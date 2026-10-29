@@ -51,12 +51,30 @@ export const AuditPage: React.FC = () => {
   };
 
   const handleStartAudit = async () => {
+    if (!file) return;
     setIsSubmitting(true);
-    // Simulate audit job creation and redirect to secret results link
-    setTimeout(() => {
+    setErrorMessage(null);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('consent_external_ai', String(consentAi));
+
+      const res = await fetch('/api/v1/audits', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.detail?.message || errData.detail || 'Audit creation failed.');
+      }
+
+      const data = await res.json();
+      navigate(`/results/${data.secret_token}`);
+    } catch (err: any) {
+      setErrorMessage(err.message || 'Failed to start audit job.');
       setIsSubmitting(false);
-      navigate('/results/synthetic-demo-audit');
-    }, 800);
+    }
   };
 
   return (
