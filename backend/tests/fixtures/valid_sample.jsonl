@@ -1,0 +1,3 @@
+{"task_id": "task_101", "prompt": "Explain why the sky appears blue.", "worker_id": "w_01", "answer": "Rayleigh scattering of shorter solar wavelengths.", "submitted_at": "2026-10-29T10:00:00Z", "seconds_spent": 25.0}
+{"task_id": "task_101", "prompt": "Explain why the sky appears blue.", "worker_id": "w_02", "answer": "Blue light scatters in all directions because it travels as smaller waves.", "submitted_at": "2026-10-29T10:02:00Z", "seconds_spent": 38.4}
+{"task_id": "task_102", "prompt": "Define recursion.", "worker_id": "w_03", "answer": "Recursion is a method where the solution depends on solutions to smaller instances.", "submitted_at": "2026-10-29T10:10:00Z", "seconds_spent": 19.8}
