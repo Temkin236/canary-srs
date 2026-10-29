@@ -11,33 +11,35 @@ export const AuditPage: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
 
-  const handleFileSelect = (selectedFile: File) => {
+  const [isValidating, setIsValidating] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const handleFileSelect = async (selectedFile: File) => {
     setFile(selectedFile);
-    // Client-side quick preview & synthetic validation
-    const mockPreview: ValidationResult = {
-      valid: true,
-      total_rows: 120,
-      tasks_count: 8,
-      workers_count: 45,
-      errors: [],
-      warnings: [],
-      detected_columns: ['task_id', 'prompt', 'worker_id', 'answer', 'submitted_at', 'seconds_spent'],
-      preview: [
-        {
-          task_id: 'task-01',
-          worker_id: 'w_9482',
-          prompt: 'Explain photosynthesis',
-          answer: 'Photosynthesis is the process by which green plants and certain other organisms use sunlight...',
-        },
-        {
-          task_id: 'task-01',
-          worker_id: 'w_1102',
-          prompt: 'Explain photosynthesis',
-          answer: 'Plants synthesize organic nutrients from carbon dioxide and water using radiant solar energy...',
-        },
-      ],
-    };
-    setValidationResult(mockPreview);
+    setErrorMessage(null);
+    setIsValidating(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+
+      const res = await fetch('/api/v1/audits/validate', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) {
+        throw new Error(`Validation error: ${res.statusText}`);
+      }
+
+      const data: ValidationResult = await res.json();
+      setValidationResult(data);
+    } catch (err) {
+      setErrorMessage(err instanceof Error ? err.message : 'Failed to validate dataset.');
+      setValidationResult(null);
+    } finally {
+      setIsValidating(false);
+    }
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -106,9 +108,15 @@ export const AuditPage: React.FC = () => {
             htmlFor="dataset-upload"
             className="px-4 py-2 rounded-md bg-[#1C1917] text-[#FAF8F5] text-xs font-medium cursor-pointer hover:bg-[#292524] transition-colors inline-block"
           >
-            {file ? 'Replace File' : 'Browse Files'}
+            {isValidating ? 'Validating dataset...' : file ? 'Replace File' : 'Browse Files'}
           </label>
         </div>
+
+        {errorMessage && (
+          <div className="p-4 rounded-md bg-red-50 border border-red-200 text-xs text-red-800">
+            <strong>Validation Error:</strong> {errorMessage}
+          </div>
+        )}
 
         {/* Validation Preview Card */}
         {validationResult && (

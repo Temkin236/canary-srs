@@ -1,0 +1,4 @@
+task_id,prompt,worker_id,answer,submitted_at,seconds_spent
+task_101,"Explain why the sky appears blue.","w_01","The sky appears blue due to Rayleigh scattering of sunlight by atmospheric gases.",2026-10-29T10:00:00Z,45.2
+task_101,"Explain why the sky appears blue.","w_02","Short wavelengths of blue light scatter much more strongly in the atmosphere.",2026-10-29T10:05:00Z,32.0
+task_102,"Summarize the primary purpose of a database index.","w_01","A database index speeds up search and retrieval operations at the cost of additional write overhead.",2026-10-29T10:15:00Z,60.5

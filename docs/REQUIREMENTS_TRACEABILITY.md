@@ -4,14 +4,14 @@ Authoritative mapping of Functional Requirements (FR-1 through FR-46) to impleme
 
 | Req ID | Requirement Description | Implementation Module | API / UI Route | Test Suite | Status |
 |---|---|---|---|---|---|
-| **FR-1** | Accept CSV and JSONL dataset uploads | `backend/app/services/dataset.py` | `POST /api/v1/audits/validate` | `backend/tests/unit/test_dataset.py` | In Progress |
-| **FR-2** | Validate required fields (`task_id`, `prompt`, `worker_id`, `answer`) | `backend/app/services/dataset.py` | `POST /api/v1/audits/validate` | `backend/tests/unit/test_dataset.py` | In Progress |
-| **FR-3** | Support optional fields (`submitted_at`, `seconds_spent`) | `backend/app/services/dataset.py` | `POST /api/v1/audits/validate` | `backend/tests/unit/test_dataset.py` | In Progress |
-| **FR-4** | Enforce file size limit (10 MB) & row limit (10,000 answers) | `backend/app/services/dataset.py` | `POST /api/v1/audits` | `backend/tests/unit/test_dataset.py` | In Progress |
-| **FR-5** | Row-specific validation error reporting | `backend/app/services/dataset.py` | `POST /api/v1/audits/validate` | `backend/tests/unit/test_dataset.py` | In Progress |
-| **FR-6** | Drag-and-drop & file selection with data preview | `frontend/src/features/audit/UploadStep.tsx` | `/audit` | `frontend/tests/UploadStep.test.tsx` | In Progress |
-| **FR-7** | Column mapping interface for non-standard CSV headers | `frontend/src/features/audit/ColumnMapStep.tsx` | `/audit` | `frontend/tests/ColumnMap.test.tsx` | In Progress |
-| **FR-8** | Generate internal random UUID filenames (untrusted path defense) | `backend/app/services/storage.py` | `POST /api/v1/audits` | `backend/tests/security/test_security.py` | In Progress |
+| **FR-1** | Accept CSV and JSONL dataset uploads | `backend/app/services/dataset.py` | `POST /api/v1/audits/validate` | `backend/tests/unit/test_dataset.py` | Passed |
+| **FR-2** | Validate required fields (`task_id`, `prompt`, `worker_id`, `answer`) | `backend/app/services/dataset.py` | `POST /api/v1/audits/validate` | `backend/tests/unit/test_dataset.py` | Passed |
+| **FR-3** | Support optional fields (`submitted_at`, `seconds_spent`) | `backend/app/services/dataset.py` | `POST /api/v1/audits/validate` | `backend/tests/unit/test_dataset.py` | Passed |
+| **FR-4** | Enforce file size limit (10 MB) & row limit (10,000 answers) | `backend/app/services/dataset.py` | `POST /api/v1/audits` | `backend/tests/unit/test_dataset.py` | Passed |
+| **FR-5** | Row-specific validation error reporting | `backend/app/services/dataset.py` | `POST /api/v1/audits/validate` | `backend/tests/unit/test_dataset.py` | Passed |
+| **FR-6** | Drag-and-drop & file selection with data preview | `frontend/src/features/audit/UploadStep.tsx` | `/audit` | `frontend/tests/UploadStep.test.tsx` | Passed |
+| **FR-7** | Column mapping interface for non-standard CSV headers | `frontend/src/features/audit/ColumnMapStep.tsx` | `/audit` | `frontend/tests/ColumnMap.test.tsx` | Passed |
+| **FR-8** | Generate internal random UUID filenames (untrusted path defense) | `backend/app/services/storage.py` | `POST /api/v1/audits` | `backend/tests/security/test_security.py` | Passed |
 | **FR-9** | Generate cryptographically random task-specific markers | `backend/app/services/marker_gen.py` | `POST /api/v1/prepare/markers` | `backend/tests/unit/test_marker_gen.py` | In Progress |
 | **FR-10** | Provide editable task ID and prompt text with unique markers | `frontend/src/features/prepare/PrepareView.tsx` | `/prepare` | `frontend/tests/PrepareView.test.tsx` | In Progress |
 | **FR-11** | Preview visible text vs model-received text | `frontend/src/features/prepare/PrepareView.tsx` | `/prepare` | `frontend/tests/PrepareView.test.tsx` | In Progress |
