@@ -12,15 +12,15 @@ Authoritative mapping of Functional Requirements (FR-1 through FR-46) to impleme
 | **FR-6** | Drag-and-drop & file selection with data preview | `frontend/src/features/audit/UploadStep.tsx` | `/audit` | `frontend/tests/UploadStep.test.tsx` | Passed |
 | **FR-7** | Column mapping interface for non-standard CSV headers | `frontend/src/features/audit/ColumnMapStep.tsx` | `/audit` | `frontend/tests/ColumnMap.test.tsx` | Passed |
 | **FR-8** | Generate internal random UUID filenames (untrusted path defense) | `backend/app/services/storage.py` | `POST /api/v1/audits` | `backend/tests/security/test_security.py` | Passed |
-| **FR-9** | Generate cryptographically random task-specific markers | `backend/app/services/marker_gen.py` | `POST /api/v1/prepare/markers` | `backend/tests/unit/test_marker_gen.py` | In Progress |
-| **FR-10** | Provide editable task ID and prompt text with unique markers | `frontend/src/features/prepare/PrepareView.tsx` | `/prepare` | `frontend/tests/PrepareView.test.tsx` | In Progress |
-| **FR-11** | Preview visible text vs model-received text | `frontend/src/features/prepare/PrepareView.tsx` | `/prepare` | `frontend/tests/PrepareView.test.tsx` | In Progress |
-| **FR-12** | At least two marker hiding approaches (Zero-width, prompt embedded) | `backend/app/services/marker_gen.py` | `POST /api/v1/prepare/markers` | `backend/tests/unit/test_marker_gen.py` | In Progress |
-| **FR-13** | Downloadable and importable marker manifest (format versioned) | `backend/app/services/marker_gen.py` | `POST /api/v1/prepare/export` | `backend/tests/unit/test_marker_gen.py` | In Progress |
-| **FR-14** | Marker check runs 100% offline | `backend/app/checks/marker.py` | Background Engine | `backend/tests/unit/test_marker_check.py` | In Progress |
-| **FR-15** | Marker exact matching and case-insensitive matching | `backend/app/checks/marker.py` | Background Engine | `backend/tests/unit/test_marker_check.py` | In Progress |
-| **FR-16** | Marker whitespace normalization and bounded typo tolerance | `backend/app/checks/marker.py` | Background Engine | `backend/tests/unit/test_marker_check.py` | In Progress |
-| **FR-17** | Provide context excerpts and character offsets for marker hits | `backend/app/checks/marker.py` | Background Engine | `backend/tests/unit/test_marker_check.py` | In Progress |
+| **FR-9** | Generate cryptographically random task-specific markers | `backend/app/services/marker_gen.py` | `POST /api/v1/prepare/markers` | `backend/tests/unit/test_marker_gen.py` | Passed |
+| **FR-10** | Provide editable task ID and prompt text with unique markers | `frontend/src/features/prepare/PrepareView.tsx` | `/prepare` | `frontend/tests/PrepareView.test.tsx` | Passed |
+| **FR-11** | Preview visible text vs model-received text | `frontend/src/features/prepare/PrepareView.tsx` | `/prepare` | `frontend/tests/PrepareView.test.tsx` | Passed |
+| **FR-12** | At least two marker hiding approaches (Zero-width, prompt embedded) | `backend/app/services/marker_gen.py` | `POST /api/v1/prepare/markers` | `backend/tests/unit/test_marker_gen.py` | Passed |
+| **FR-13** | Downloadable and importable marker manifest (format versioned) | `backend/app/services/marker_gen.py` | `POST /api/v1/prepare/export` | `backend/tests/unit/test_marker_gen.py` | Passed |
+| **FR-14** | Marker check runs 100% offline | `backend/app/checks/marker.py` | Background Engine | `backend/tests/unit/test_marker_check.py` | Passed |
+| **FR-15** | Marker exact matching and case-insensitive matching | `backend/app/checks/marker.py` | Background Engine | `backend/tests/unit/test_marker_check.py` | Passed |
+| **FR-16** | Marker whitespace normalization and bounded typo tolerance | `backend/app/checks/marker.py` | Background Engine | `backend/tests/unit/test_marker_check.py` | Passed |
+| **FR-17** | Provide context excerpts and character offsets for marker hits | `backend/app/checks/marker.py` | Background Engine | `backend/tests/unit/test_marker_check.py` | Passed |
 | **FR-18** | Reference answer generation support (up to 3 per provider) | `backend/app/services/ai_provider.py` | Background Engine | `backend/tests/unit/test_similarity.py` | In Progress |
 | **FR-19** | Lexical TF-IDF cosine similarity comparison | `backend/app/checks/similarity.py` | Background Engine | `backend/tests/unit/test_similarity.py` | In Progress |
 | **FR-20** | Semantic embedding similarity comparison | `backend/app/checks/similarity.py` | Background Engine | `backend/tests/unit/test_similarity.py` | In Progress |

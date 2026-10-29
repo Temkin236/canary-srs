@@ -33,39 +33,36 @@ export const PreparePage: React.FC = () => {
     setTasks(updated);
   };
 
-  const handleGenerate = () => {
-    const results: PreparedTask[] = tasks.map((t) => {
-      // Deterministic / random pseudo token
-      const randomHex = Math.random().toString(16).substring(2, 10);
-      const marker = `cnry_${randomHex}`;
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generateError, setGenerateError] = useState<string | null>(null);
 
-      if (hidingMethod === 'zero_width') {
-        // Zero-width space sequences
-        const zeroWidthMarker = '\u200B\u200C' + marker + '\u200D\u200B';
-        return {
-          task_id: t.id,
-          prompt: t.prompt,
-          marker,
-          hiding_method: 'zero_width',
-          prepared_prompt: t.prompt + zeroWidthMarker,
-          visible_preview: t.prompt,
-          model_received_preview: `${t.prompt} [Hidden Marker: ${marker}]`,
-        };
-      } else {
-        const footnote = `\n\n[Reference Note: Canary verification index #${marker}]`;
-        return {
-          task_id: t.id,
-          prompt: t.prompt,
-          marker,
-          hiding_method: 'prompt_embedded',
-          prepared_prompt: t.prompt + footnote,
-          visible_preview: t.prompt + footnote,
-          model_received_preview: t.prompt + footnote,
-        };
+  const handleGenerate = async () => {
+    setIsGenerating(true);
+    setGenerateError(null);
+
+    try {
+      const payload = {
+        tasks: tasks.map((t) => ({ task_id: t.id, prompt: t.prompt })),
+        hiding_method: hidingMethod,
+      };
+
+      const res = await fetch('/api/v1/prepare/markers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Failed to generate markers: ${res.statusText}`);
       }
-    });
 
-    setPreparedTasks(results);
+      const data = await res.json();
+      setPreparedTasks(data.tasks);
+    } catch (err) {
+      setGenerateError(err instanceof Error ? err.message : 'Error generating markers.');
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const handleCopy = (text: string, idx: number) => {
@@ -199,12 +196,19 @@ export const PreparePage: React.FC = () => {
               </div>
             </div>
 
+            {generateError && (
+              <div className="mt-4 p-3 rounded bg-red-50 border border-red-200 text-xs text-red-700">
+                {generateError}
+              </div>
+            )}
+
             <div className="mt-6">
               <button
                 onClick={handleGenerate}
+                disabled={isGenerating}
                 className="w-full py-2.5 rounded-md bg-[#1C1917] text-[#FAF8F5] text-xs font-medium hover:bg-[#292524] transition-colors"
               >
-                Generate Canary Markers & Prepared Prompts
+                {isGenerating ? 'Generating Markers...' : 'Generate Canary Markers & Prepared Prompts'}
               </button>
             </div>
           </div>
