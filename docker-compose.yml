@@ -1,0 +1,75 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=postgresql://canary:canary_secret@db:5432/canary_prod
+      - REDIS_URL=redis://redis:6379/0
+      - USE_IN_MEMORY_QUEUE=false
+      - STORAGE_PATH=/app/data/storage
+      - ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - canary_storage:/app/data/storage
+
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: python -m app.jobs.worker
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=postgresql://canary:canary_secret@db:5432/canary_prod
+      - REDIS_URL=redis://redis:6379/0
+      - USE_IN_MEMORY_QUEUE=false
+      - STORAGE_PATH=/app/data/storage
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - canary_storage:/app/data/storage
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=canary
+      - POSTGRES_PASSWORD=canary_secret
+      - POSTGRES_DB=canary_prod
+    volumes:
+      - canary_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U canary -d canary_prod"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - canary_redisdata:/data
+
+volumes:
+  canary_storage:
+  canary_pgdata:
+  canary_redisdata:
