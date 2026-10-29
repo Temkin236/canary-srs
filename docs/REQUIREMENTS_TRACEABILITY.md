@@ -49,4 +49,4 @@ Authoritative mapping of Functional Requirements (FR-1 through FR-46) to impleme
 | **FR-43** | Human-labeled baseline sample calibration with Wilson interval | `backend/app/services/calibration.py` | `POST /api/v1/audits` | `backend/tests/unit/test_calibration.py` | Passed |
 | **FR-44** | Reproducible evaluation CLI script (`scripts/evaluate.py`) | `scripts/evaluate.py` | CLI Command | `backend/tests/integration/test_eval.py` | Passed |
 | **FR-45** | Real measured Accuracy page loading latest evaluation artifact | `frontend/src/pages/AccuracyPage.tsx` | `/accuracy` | `frontend/tests/AccuracyPage.test.tsx` | Passed |
-| **FR-46** | Full website navigation: Home, How it works, Prepare, Audit, Accuracy, Privacy, Terms, Contact | `frontend/src/pages/` | All Routes | `frontend/tests/Navigation.test.tsx` | In Progress |
+| **FR-46** | Full website navigation: Home, How it works, Prepare, Audit, Accuracy, Privacy, Terms, Contact | `frontend/src/pages/` | All Routes | `frontend/tests/Navigation.test.tsx` | Passed |
