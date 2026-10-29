@@ -40,12 +40,12 @@ Authoritative mapping of Functional Requirements (FR-1 through FR-46) to impleme
 | **FR-34** | Idempotent stage execution and partial result preservation | `backend/app/jobs/runner.py` | Worker | `backend/tests/integration/test_job.py` | Passed |
 | **FR-35** | Secret URL generation with 256-bit cryptographic entropy | `backend/app/core/security.py` | `POST /api/v1/audits` | `backend/tests/security/test_security.py` | Passed |
 | **FR-36** | Store only SHA-256 hash of audit secret tokens in database | `backend/app/models/audit.py` | `POST /api/v1/audits` | `backend/tests/security/test_security.py` | Passed |
-| **FR-37** | Audit results UI with summary cards, worker filters, and findings | `frontend/src/features/results/` | `/results/:secret` | `frontend/tests/ResultsView.test.tsx` | In Progress |
-| **FR-38** | Self-contained offline HTML report generation (inline CSS) | `backend/app/reporting/html_export.py` | `GET /api/v1/audits/{secret}/export.html`| `backend/tests/unit/test_reporting.py` | In Progress |
-| **FR-39** | Formula-injection protected CSV export | `backend/app/reporting/csv_export.py` | `GET /api/v1/audits/{secret}/export.csv`| `backend/tests/security/test_security.py` | In Progress |
-| **FR-40** | Machine-readable JSON export of findings and metadata | `backend/app/reporting/json_export.py`| `GET /api/v1/audits/{secret}/export.json`| `backend/tests/unit/test_reporting.py` | In Progress |
-| **FR-41** | "Delete Now" action cascading immediate purge of audit data | `backend/app/services/audit.py` | `DELETE /api/v1/audits/{secret}` | `backend/tests/unit/test_audit_delete.py`| In Progress |
-| **FR-42** | Automatic 7-day data retention cleanup job | `backend/app/jobs/cleanup.py` | Cron / Worker | `backend/tests/unit/test_cleanup.py` | In Progress |
+| **FR-37** | Audit results UI with summary cards, worker filters, and findings | `frontend/src/pages/ResultsPage.tsx` | `/results/:secret` | `backend/tests/integration/test_job.py` | Passed |
+| **FR-38** | Self-contained offline HTML report generation (inline CSS) | `backend/app/reporting/html_export.py` | `GET /api/v1/audits/{secret}/export.html`| `backend/tests/unit/test_reporting.py` | Passed |
+| **FR-39** | Formula-injection protected CSV export | `backend/app/reporting/csv_export.py` | `GET /api/v1/audits/{secret}/export.csv`| `backend/tests/unit/test_reporting.py` | Passed |
+| **FR-40** | Machine-readable JSON export of findings and metadata | `backend/app/reporting/json_export.py`| `GET /api/v1/audits/{secret}/export.json`| `backend/tests/unit/test_reporting.py` | Passed |
+| **FR-41** | "Delete Now" action cascading immediate purge of audit data | `backend/app/services/audit.py` | `DELETE /api/v1/audits/{secret}` | `backend/tests/unit/test_cleanup.py` | Passed |
+| **FR-42** | Automatic 7-day data retention cleanup job | `backend/app/jobs/cleanup.py` | Cron / Worker | `backend/tests/unit/test_cleanup.py` | Passed |
 | **FR-43** | Human-labeled baseline sample calibration with Wilson interval | `backend/app/services/calibration.py` | `POST /api/v1/audits` | `backend/tests/unit/test_calibration.py` | In Progress |
 | **FR-44** | Reproducible evaluation CLI script (`scripts/evaluate.py`) | `scripts/evaluate.py` | CLI Command | `backend/tests/integration/test_eval.py` | In Progress |
 | **FR-45** | Real measured Accuracy page loading latest evaluation artifact | `frontend/src/pages/AccuracyPage.tsx` | `/accuracy` | `frontend/tests/AccuracyPage.test.tsx` | In Progress |
