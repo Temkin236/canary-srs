@@ -21,18 +21,18 @@ Authoritative mapping of Functional Requirements (FR-1 through FR-46) to impleme
 | **FR-15** | Marker exact matching and case-insensitive matching | `backend/app/checks/marker.py` | Background Engine | `backend/tests/unit/test_marker_check.py` | Passed |
 | **FR-16** | Marker whitespace normalization and bounded typo tolerance | `backend/app/checks/marker.py` | Background Engine | `backend/tests/unit/test_marker_check.py` | Passed |
 | **FR-17** | Provide context excerpts and character offsets for marker hits | `backend/app/checks/marker.py` | Background Engine | `backend/tests/unit/test_marker_check.py` | Passed |
-| **FR-18** | Reference answer generation support (up to 3 per provider) | `backend/app/services/ai_provider.py` | Background Engine | `backend/tests/unit/test_similarity.py` | In Progress |
-| **FR-19** | Lexical TF-IDF cosine similarity comparison | `backend/app/checks/similarity.py` | Background Engine | `backend/tests/unit/test_similarity.py` | In Progress |
-| **FR-20** | Semantic embedding similarity comparison | `backend/app/checks/similarity.py` | Background Engine | `backend/tests/unit/test_similarity.py` | In Progress |
-| **FR-21** | Peer-answer group distribution and percentile ranking | `backend/app/checks/similarity.py` | Background Engine | `backend/tests/unit/test_similarity.py` | In Progress |
-| **FR-22** | Guard against misleading percentiles in small peer groups (<5 answers) | `backend/app/checks/similarity.py` | Background Engine | `backend/tests/unit/test_similarity.py` | In Progress |
-| **FR-23** | Normalized exact duplicate answer detection across workers | `backend/app/checks/duplicates.py` | Background Engine | `backend/tests/unit/test_duplicates.py` | In Progress |
-| **FR-24** | Explainable near-duplicate detection across workers | `backend/app/checks/duplicates.py` | Background Engine | `backend/tests/unit/test_duplicates.py` | In Progress |
-| **FR-25** | Efficient candidate generation for near-duplicates (up to 10k items) | `backend/app/checks/duplicates.py` | Background Engine | `backend/tests/unit/test_duplicates.py` | In Progress |
-| **FR-26** | Grouping of duplicate clusters with matching phrase excerpts | `backend/app/checks/duplicates.py` | Background Engine | `backend/tests/unit/test_duplicates.py` | In Progress |
-| **FR-27** | Speed plausibility check based on typing velocity threshold | `backend/app/checks/speed.py` | Background Engine | `backend/tests/unit/test_speed.py` | In Progress |
-| **FR-28** | Skip speed analysis gracefully when timing data is missing | `backend/app/checks/speed.py` | Background Engine | `backend/tests/unit/test_speed.py` | In Progress |
-| **FR-29** | Unified deterministic evidence confidence rules (High, Medium, Low) | `backend/app/checks/base.py` | Background Engine | `backend/tests/unit/test_confidence.py` | In Progress |
+| **FR-18** | Reference answer generation support (up to 3 per provider) | `backend/app/services/ai_provider.py` | Background Engine | `backend/tests/unit/test_ai_provider.py` | Passed |
+| **FR-19** | Lexical TF-IDF cosine similarity comparison | `backend/app/checks/similarity.py` | Background Engine | `backend/tests/unit/test_similarity.py` | Passed |
+| **FR-20** | Semantic embedding similarity comparison | `backend/app/checks/similarity.py` | Background Engine | `backend/tests/unit/test_similarity.py` | Passed |
+| **FR-21** | Peer-answer group distribution and percentile ranking | `backend/app/checks/similarity.py` | Background Engine | `backend/tests/unit/test_similarity.py` | Passed |
+| **FR-22** | Guard against misleading percentiles in small peer groups (<5 answers) | `backend/app/checks/similarity.py` | Background Engine | `backend/tests/unit/test_similarity.py` | Passed |
+| **FR-23** | Normalized exact duplicate answer detection across workers | `backend/app/checks/duplicates.py` | Background Engine | `backend/tests/unit/test_duplicates.py` | Passed |
+| **FR-24** | Explainable near-duplicate detection across workers | `backend/app/checks/duplicates.py` | Background Engine | `backend/tests/unit/test_duplicates.py` | Passed |
+| **FR-25** | Efficient candidate generation for near-duplicates (up to 10k items) | `backend/app/checks/duplicates.py` | Background Engine | `backend/tests/unit/test_duplicates.py` | Passed |
+| **FR-26** | Grouping of duplicate clusters with matching phrase excerpts | `backend/app/checks/duplicates.py` | Background Engine | `backend/tests/unit/test_duplicates.py` | Passed |
+| **FR-27** | Speed plausibility check based on typing velocity threshold | `backend/app/checks/speed.py` | Background Engine | `backend/tests/unit/test_speed.py` | Passed |
+| **FR-28** | Skip speed analysis gracefully when timing data is missing | `backend/app/checks/speed.py` | Background Engine | `backend/tests/unit/test_speed.py` | Passed |
+| **FR-29** | Unified deterministic evidence confidence rules (High, Medium, Low) | `backend/app/checks/base.py` | Background Engine | `backend/tests/unit/test_confidence.py` | Passed |
 | **FR-30** | Prominent limitation notices: "Evidence for review, not proof" | `frontend/src/features/results/ResultSummary.tsx`| `/results/:secret` | `frontend/tests/ResultSummary.test.tsx`| In Progress |
 | **FR-31** | Durable database-backed audit job lifecycle states | `backend/app/models/audit.py` | `GET /api/v1/audits/{secret}/status`| `backend/tests/integration/test_job.py` | In Progress |
 | **FR-32** | Asynchronous worker process with Redis and In-Memory fallback | `backend/app/jobs/` | Worker | `backend/tests/integration/test_job.py` | In Progress |
