@@ -10,8 +10,8 @@ This document tracks the incremental professionalization and upgrade of the Cana
 |---|---|---|---|---|---|
 | **Milestone 0** | Repository Audit, Baseline Tests, Architecture Review & Upgrade Plan | `main` | N/A | **Completed** | 57 Backend / 8 Frontend |
 | **Milestone 1** | Design System & Professional Reviewer Dashboard | `feat/professional-dashboard` | PR #11 | **Completed** | 59 Backend / 12 Frontend |
-| **Milestone 2** | Advanced Evidence Investigation & Reviewer Workflow | `feat/evidence-investigation` | Pending | **In Progress** | — |
-| **Milestone 3** | Dataset Quality Analytics | `feat/dataset-quality-analytics` | Pending | Planned | — |
+| **Milestone 2** | Advanced Evidence Investigation & Reviewer Workflow | `feat/evidence-investigation` | PR #12 | **Completed** | 60 Backend / 16 Frontend |
+| **Milestone 3** | Dataset Quality Analytics | `feat/dataset-quality-analytics` | Pending | **In Progress** | — |
 | **Milestone 4** | Benchmark Laboratory and Calibration | `feat/benchmark-laboratory` | Pending | Planned | — |
 | **Milestone 5** | Organizations, Memberships and RBAC | `feat/organizations-rbac` | Pending | Planned | — |
 | **Milestone 6** | Dataset Provenance and Audit History | `feat/dataset-provenance` | Pending | Planned | — |
@@ -69,3 +69,29 @@ This document tracks the incremental professionalization and upgrade of the Cana
   - Ruff: 0 errors, 100% formatted.
   - TypeScript: 0 errors (`tsc --noEmit`).
   - Vite build: passed (`dist/assets/index-*.js`).
+
+---
+
+### Milestone 2: Advanced Evidence Investigation & Reviewer Workflow
+- **Status**: Completed
+- **Branch**: `feat/evidence-investigation`
+- **Files Modified/Created**:
+  - `backend/app/models/audit.py`: Added `FindingReviewHistory` entity linked to `Finding` for immutable audit logs of status changes, reviewer assignments, notes, and dismissal rationales.
+  - `backend/app/schemas/investigation.py`: Models for `InvestigationWorkspaceResponse`, `FindingReviewUpdateRequest`, `SideBySideComparisonResponse`, `ComparisonDiffSegment`, `MarkerInvestigationItem`, and `DuplicateClusterItem`.
+  - `backend/app/api/v1/investigation.py`: Endpoints for `GET /audits/{id}/investigate`, `PATCH /findings/{id}/review`, `GET /findings/{id}/history`, and `GET /findings/{id}/comparison` (SequenceMatcher diffs).
+  - `backend/app/api/v1/router.py`: Mounted `/investigation` router.
+  - `backend/app/api/v1/audits.py`: Guaranteed 100% progress return on completed/partially_completed audits.
+  - `backend/tests/integration/test_investigation.py`: Integration tests for full investigation payload, finding adjudication workflow, decision history, and side-by-side diff generation.
+  - `frontend/src/types/index.ts`: Added types for `FindingDetailedItem`, `ReviewStatus`, `SideBySideComparisonResponse`, `InvestigationWorkspaceResponse`.
+  - `frontend/src/components/investigation/SideBySideComparisonModal.tsx`: Side-by-side text comparison with highlighted matching substrings, sequence metrics, and methodology limitation disclaimers.
+  - `frontend/src/components/investigation/AdjudicationModal.tsx`: Reviewer status update modal (`pending_review`, `under_review`, `reviewed`, `dismissed`, `needs_investigation`) with dismissal reasons, assignment, notes, and decision audit trail.
+  - `frontend/src/pages/InvestigationPage.tsx`: Dedicated investigation workspace with tabbed sections (Findings Adjudication, Overview & Metadata, Marker Verification, Duplicate Clusters, Review History, Privacy & Purge).
+  - `frontend/src/App.tsx`: Registered `/audits/:auditId` and `/investigate/:auditId` routes.
+  - `frontend/tests/Investigation.test.tsx`: Component tests for workspace rendering, tab navigation, comparison modal, and adjudication workflow.
+- **Verified Tests**:
+  - Backend: 60 passed (1 new integration test suite covering adjudication, diffing, and history).
+  - Frontend: 16 passed (4 new investigation workspace tests).
+  - Ruff: 0 errors, 100% formatted.
+  - TypeScript: 0 errors (`tsc --noEmit`).
+  - Vite build: passed (`dist/assets/index-*.js`).
+

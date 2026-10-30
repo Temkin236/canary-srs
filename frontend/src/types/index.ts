@@ -147,3 +147,119 @@ export interface DashboardAuditsResponse {
   total_pages: number;
 }
 
+export type ReviewStatus =
+  | 'pending_review'
+  | 'under_review'
+  | 'reviewed'
+  | 'dismissed'
+  | 'needs_investigation';
+
+export interface FindingReviewHistoryItem {
+  id: string;
+  finding_id: string;
+  action: string;
+  previous_status: string;
+  new_status: string;
+  reviewer_id: string;
+  notes?: string;
+  dismissal_reason?: string;
+  created_at: string;
+}
+
+export interface FindingDetailedItem {
+  id: string;
+  audit_id: string;
+  answer_id: string;
+  task_id: string;
+  worker_id: string;
+  check_identifier: string;
+  finding_type: string;
+  evidence_confidence: string;
+  explanation: string;
+  evidence_text?: string;
+  evidence_offsets?: [number, number];
+  numerical_measurements: Record<string, any>;
+  related_answer_ids: string[];
+  limitations: string;
+  review_status: ReviewStatus;
+  reviewer_notes?: string;
+  assigned_reviewer?: string;
+  reviewed_at?: string;
+  created_at: string;
+  worker_answer?: string;
+  prompt?: string;
+  history: FindingReviewHistoryItem[];
+}
+
+export interface ComparisonDiffSegment {
+  text: string;
+  is_match: boolean;
+  is_source_only: boolean;
+  is_target_only: boolean;
+}
+
+export interface SideBySideComparisonResponse {
+  finding_id: string;
+  task_id: string;
+  worker_id: string;
+  comparison_type: string;
+  source_answer: string;
+  target_answer: string;
+  target_label: string;
+  similarity_score?: number;
+  measurements: Record<string, any>;
+  explanation: string;
+  diff_segments: ComparisonDiffSegment[];
+  limitations: string;
+}
+
+export interface MarkerInvestigationItem {
+  id: string;
+  task_id: string;
+  marker_id: string;
+  expected_marker: string;
+  detected: boolean;
+  detected_marker?: string;
+  location_in_answer?: [number, number];
+  preparation_version: string;
+  finding_id?: string;
+}
+
+export interface DuplicateClusterItem {
+  cluster_id: string;
+  task_id: string;
+  worker_ids: string[];
+  answer_ids: string[];
+  representative_text: string;
+  similarity_matrix: Record<string, number>;
+  findings_count: number;
+}
+
+export interface InvestigationWorkspaceResponse {
+  audit: {
+    id: string;
+    dataset_name: string;
+    status: AuditStatus;
+    answers_count: number;
+    workers_count: number;
+    flagged_workers_count: number;
+    consent_external_ai: boolean;
+    created_at: string;
+    completed_at?: string;
+    expires_at: string;
+    owner_id?: string;
+    summary_metrics: Record<string, any>;
+  };
+  findings: FindingDetailedItem[];
+  markers: MarkerInvestigationItem[];
+  duplicate_clusters: DuplicateClusterItem[];
+  calibration?: {
+    sample_size: number;
+    flagged_count: number;
+    estimated_fp_rate: number;
+    ci_lower: number;
+    ci_upper: number;
+    ci_method: string;
+  };
+}
+
