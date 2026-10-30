@@ -162,6 +162,12 @@ class Finding(Base):
 
     audit = relationship("Audit", back_populates="findings")
     audit_answer = relationship("AuditAnswer", back_populates="findings")
+    review_history = relationship(
+        "FindingReviewHistory",
+        back_populates="finding",
+        cascade="all, delete-orphan",
+        order_by="FindingReviewHistory.created_at.desc()",
+    )
 
 
 class CalibrationRun(Base):
@@ -229,3 +235,24 @@ class EvaluationMetadata(Base):
     ci_method = Column(String(32), default="wilson", nullable=False)
     configuration = Column(JSON, default=dict, nullable=False)
     created_at = Column(DateTime, default=get_utc_now, nullable=False)
+
+
+class FindingReviewHistory(Base):
+    __tablename__ = "finding_review_history"
+
+    id = Column(String(36), primary_key=True, index=True)
+    finding_id = Column(
+        String(36), ForeignKey("findings.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    audit_id = Column(
+        String(36), ForeignKey("audits.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    action = Column(String(32), nullable=False)  # status_change, note_added, assignment
+    previous_status = Column(String(32), nullable=False)
+    new_status = Column(String(32), nullable=False)
+    reviewer_id = Column(String(128), default="reviewer", nullable=False)
+    notes = Column(Text, nullable=True)
+    dismissal_reason = Column(Text, nullable=True)
+    created_at = Column(DateTime, default=get_utc_now, nullable=False)
+
+    finding = relationship("Finding", back_populates="review_history")

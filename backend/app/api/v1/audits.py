@@ -221,11 +221,19 @@ def get_audit_status_endpoint(
 
     job_state = db.query(JobState).filter(JobState.audit_id == audit.id).first()
 
+    # Derive progress percentage
+    if audit.status in ("completed", "partially_completed"):
+        progress_pct = 100
+    elif job_state:
+        progress_pct = job_state.progress_percentage
+    else:
+        progress_pct = 0
+
     return AuditStatusResponse(
         audit_id=audit.id,
         status=audit.status,
         stage=job_state.stage if job_state else audit.status,
-        progress_percentage=job_state.progress_percentage if job_state else 100,
+        progress_percentage=progress_pct,
         current_check=job_state.current_check if job_state else None,
         answers_count=audit.answers_count,
         workers_count=audit.workers_count,
