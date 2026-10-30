@@ -33,6 +33,8 @@ class Audit(Base):
     consent_external_ai = Column(Boolean, default=False, nullable=False)
     config = Column(JSON, default=dict, nullable=False)
     summary_metrics = Column(JSON, default=dict, nullable=False)
+    dataset_name = Column(String(256), default="dataset.csv", nullable=False)
+    owner_id = Column(String(128), nullable=True)
     created_at = Column(DateTime, default=get_utc_now, nullable=False)
     completed_at = Column(DateTime, nullable=True)
     expires_at = Column(DateTime, nullable=False, index=True)
@@ -152,6 +154,10 @@ class Finding(Base):
         default="Evidence for human review only; does not prove cheating.",
         nullable=False,
     )
+    review_status = Column(String(32), default="pending_review", nullable=False, index=True)
+    reviewer_notes = Column(Text, nullable=True)
+    assigned_reviewer = Column(String(128), nullable=True)
+    reviewed_at = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=get_utc_now, nullable=False)
 
     audit = relationship("Audit", back_populates="findings")

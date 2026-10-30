@@ -102,3 +102,48 @@ export interface ValidationResult {
   preview: Array<Record<string, unknown>>;
   detected_columns: string[];
 }
+
+export interface DashboardStats {
+  total_audits: number;
+  completed_audits: number;
+  running_audits: number;
+  failed_audits: number;
+  total_answers_analyzed: number;
+  findings_requiring_review: number;
+  reviewed_findings: number;
+  high_confidence_findings: number;
+  medium_confidence_findings: number;
+  low_confidence_findings: number;
+  findings_by_category: Record<string, number>;
+  audits_by_status: Record<string, number>;
+  activity_over_time: Array<{
+    date: string;
+    audits: number;
+    findings: number;
+  }>;
+  dataset_size_distribution: Record<string, number>;
+}
+
+export interface DashboardAuditItem {
+  id: string;
+  dataset_name: string;
+  status: AuditStatus;
+  answers_count: number;
+  workers_count: number;
+  flagged_workers_count: number;
+  findings_count: number;
+  created_at: string;
+  completed_at?: string;
+  duration_seconds?: number;
+  expires_at: string;
+  owner_id?: string;
+}
+
+export interface DashboardAuditsResponse {
+  items: DashboardAuditItem[];
+  total: number;
+  page: number;
+  page_size: number;
+  total_pages: number;
+}
+
