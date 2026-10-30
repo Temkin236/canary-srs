@@ -43,6 +43,15 @@ describe('Website Navigation (FR-46)', () => {
     expect(screen.getByRole('heading', { name: /Measured Accuracy & Evaluation/i })).toBeInTheDocument();
   });
 
+  it('renders Reviewer Dashboard page at /dashboard', () => {
+    render(
+      <MemoryRouter initialEntries={['/dashboard']}>
+        <App />
+      </MemoryRouter>
+    );
+    expect(screen.getByRole('heading', { name: /Reviewer Workspace & Analytics/i })).toBeInTheDocument();
+  });
+
   it('renders Privacy Policy page at /privacy', () => {
     render(
       <MemoryRouter initialEntries={['/privacy']}>

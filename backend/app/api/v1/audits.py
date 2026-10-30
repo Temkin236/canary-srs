@@ -109,6 +109,7 @@ async def create_audit_endpoint(
         id=audit_id,
         token_hash=token_hash,
         status="queued",
+        dataset_name=safe_name,
         answers_count=len(parsed_rows),
         workers_count=len({r["worker_id"] for r in parsed_rows}),
         consent_external_ai=consent_external_ai,
