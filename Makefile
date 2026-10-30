@@ -30,8 +30,12 @@ format:
 build:
 	cd frontend && npm run build
 
+dev:
+	@echo "Starting backend and frontend concurrently..."
+	@make -j 2 dev-backend dev-frontend
+
 dev-backend:
-	cd backend && .venv/bin/uvicorn app.main:app --reload --port 8000
+	cd backend && uv run uvicorn app.main:app --reload --port 8000
 
 dev-frontend:
 	cd frontend && npm run dev
