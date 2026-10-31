@@ -18,6 +18,7 @@ import {
 } from '../types';
 import { SideBySideComparisonModal } from '../components/investigation/SideBySideComparisonModal';
 import { AdjudicationModal } from '../components/investigation/AdjudicationModal';
+import { DatasetQualityView } from '../components/investigation/DatasetQualityView';
 
 export const InvestigationPage: React.FC = () => {
   const { auditId } = useParams<{ auditId: string }>();
@@ -27,10 +28,11 @@ export const InvestigationPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Tab State: overview | findings | markers | duplicates | history | privacy
+  // Tab State: overview | findings | markers | duplicates | quality | history | privacy
   const [activeTab, setActiveTab] = useState<
-    'overview' | 'findings' | 'markers' | 'duplicates' | 'history' | 'privacy'
+    'overview' | 'findings' | 'markers' | 'duplicates' | 'quality' | 'history' | 'privacy'
   >('findings');
+
 
   // Findings Filters
   const [confidenceFilter, setConfidenceFilter] = useState<string>('all');
@@ -197,6 +199,7 @@ export const InvestigationPage: React.FC = () => {
         {[
           { id: 'findings', label: 'Findings Adjudication', count: data?.findings.length },
           { id: 'overview', label: 'Overview & Metadata' },
+          { id: 'quality', label: 'Dataset Quality' },
           { id: 'markers', label: 'Marker Verification', count: data?.markers.length },
           { id: 'duplicates', label: 'Duplicate Clusters', count: data?.duplicate_clusters.length },
           { id: 'history', label: 'Review History' },
@@ -488,6 +491,11 @@ export const InvestigationPage: React.FC = () => {
                 </div>
               )}
             </div>
+          )}
+
+          {/* TAB: DATASET QUALITY ANALYTICS */}
+          {activeTab === 'quality' && (
+            <DatasetQualityView auditId={data.audit.id} />
           )}
 
           {/* TAB 3: MARKER VERIFICATION */}

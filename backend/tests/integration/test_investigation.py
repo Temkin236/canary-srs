@@ -1,23 +1,16 @@
 import datetime
 import uuid
 
-from fastapi.testclient import TestClient
-
-from app.db.session import SessionLocal
-from app.main import app
 from app.models.audit import Audit, AuditAnswer, Finding, Marker, ReferenceAnswer
 
-client = TestClient(app)
 
-
-def test_investigation_workspace_workflow():
-    db = SessionLocal()
+def test_investigation_workspace_workflow(client, db_session):
     now = datetime.datetime.now(datetime.timezone.utc)
     expires = now + datetime.timedelta(days=7)
 
     # 1. Seed audit with an answer, reference answer, marker, and finding
     audit_id = str(uuid.uuid4())
-    token_hash = "f" * 64
+    token_hash = (uuid.uuid4().hex + uuid.uuid4().hex)[:64]
     audit = Audit(
         id=audit_id,
         token_hash=token_hash,
@@ -31,7 +24,7 @@ def test_investigation_workspace_workflow():
         completed_at=now,
         expires_at=expires,
     )
-    db.add(audit)
+    db_session.add(audit)
 
     ans_id = str(uuid.uuid4())
     answer = AuditAnswer(
@@ -46,7 +39,7 @@ def test_investigation_workspace_workflow():
         ),
         submitted_at=now,
     )
-    db.add(answer)
+    db_session.add(answer)
 
     ref = ReferenceAnswer(
         id=str(uuid.uuid4()),
@@ -59,7 +52,7 @@ def test_investigation_workspace_workflow():
             "into chemical sugar."
         ),
     )
-    db.add(ref)
+    db_session.add(ref)
 
     marker = Marker(
         id=str(uuid.uuid4()),
@@ -68,7 +61,7 @@ def test_investigation_workspace_workflow():
         marker_token="cnry_alpha_99",
         hiding_method="zero_width",
     )
-    db.add(marker)
+    db_session.add(marker)
 
     finding_id = str(uuid.uuid4())
     finding = Finding(
@@ -87,8 +80,8 @@ def test_investigation_workspace_workflow():
         numerical_measurements={"jaccard_similarity": 0.94, "tfidf_cosine": 0.96},
         review_status="pending_review",
     )
-    db.add(finding)
-    db.commit()
+    db_session.add(finding)
+    db_session.commit()
 
     # 2. Test GET /api/v1/audits/{id}/investigate
     res = client.get(f"/api/v1/audits/{audit_id}/investigate")
