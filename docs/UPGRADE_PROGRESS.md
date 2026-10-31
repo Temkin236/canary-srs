@@ -11,7 +11,7 @@ This document tracks the incremental professionalization and upgrade of the Cana
 | **Milestone 0** | Repository Audit, Baseline Tests, Architecture Review & Upgrade Plan | `main` | N/A | **Completed** | 57 Backend / 8 Frontend |
 | **Milestone 1** | Design System & Professional Reviewer Dashboard | `feat/professional-dashboard` | PR #11 | **Completed** | 59 Backend / 12 Frontend |
 | **Milestone 2** | Advanced Evidence Investigation & Reviewer Workflow | `feat/evidence-investigation` | PR #12 | **Completed** | 60 Backend / 16 Frontend |
-| **Milestone 3** | Dataset Quality Analytics | `feat/dataset-quality-analytics` | Pending | **In Progress** | — |
+| **Milestone 3** | Dataset Quality Analytics | `feat/dataset-quality-analytics` | PR #13 | **Completed** | 63 Backend / 20 Frontend |
 | **Milestone 4** | Benchmark Laboratory and Calibration | `feat/benchmark-laboratory` | Pending | Planned | — |
 | **Milestone 5** | Organizations, Memberships and RBAC | `feat/organizations-rbac` | Pending | Planned | — |
 | **Milestone 6** | Dataset Provenance and Audit History | `feat/dataset-provenance` | Pending | Planned | — |
@@ -95,3 +95,24 @@ This document tracks the incremental professionalization and upgrade of the Cana
   - TypeScript: 0 errors (`tsc --noEmit`).
   - Vite build: passed (`dist/assets/index-*.js`).
 
+---
+
+### Milestone 3: Dataset Quality Analytics
+- **Status**: Completed
+- **Branch**: `feat/dataset-quality-analytics`
+- **Files Modified/Created**:
+  - `backend/app/schemas/quality.py`: Pydantic models for `DatasetQualityResponse`, `AnswerLengthStats`, `HistogramBucket`, `WorkerParticipationStats`, `WorkerContribution`, `TaskCoverageStats`, `SubmissionTimeStats`, and `QualityWarning`.
+  - `backend/app/services/quality.py`: Pure descriptive dataset profiling engine calculating entity counts, weighted completeness score (0-100), character and word length statistics, binned histograms (length, worker participation, task coverage), submission-time 24-hour distribution, velocity metrics, and automated quality warnings (empty answers, missing timestamps, worker concentration >35%, short answers, verbatim duplicates). Includes zero-record dataset fallback.
+  - `backend/app/api/v1/quality.py`: Endpoints for `GET /api/v1/audits/{id}/quality` and `GET /api/v1/audits/{id}/quality/export` (CSV and JSON format with strict CSV formula injection mitigation escaping `=`, `+`, `-`, `@`, `\t`, `\r` with `'` and disclaimer notice).
+  - `backend/app/api/v1/router.py`: Mounted `/quality` router.
+  - `backend/tests/integration/test_quality.py`: Integration test suite validating profile generation, entity statistics, histogram buckets, warnings, formula-injection protected CSV exports, and zero-record dataset handling.
+  - `frontend/src/types/index.ts`: Added TypeScript interfaces for quality models, histogram buckets, warnings, and responses.
+  - `frontend/src/components/investigation/DatasetQualityView.tsx`: Full-featured interactive quality tab view with completeness score progress bar, scorecard grid, quality warnings cards, character length histogram, worker participation distribution & top contributors table, task coverage histogram, 24-hour submission distribution bar chart, and CSV/JSON export buttons.
+  - `frontend/src/pages/InvestigationPage.tsx`: Integrated Dataset Quality tab into the workspace navigation and tab switching.
+  - `frontend/tests/Quality.test.tsx`: Component tests for quality view rendering, scorecard metrics, warnings, histogram bars, tab navigation from InvestigationPage, empty state fallback, and error/retry states.
+- **Verified Tests**:
+  - Backend: 63 passed (3 new integration tests in `test_quality.py`).
+  - Frontend: 20 passed (4 new quality tests in `Quality.test.tsx`).
+  - Ruff: 0 errors, 100% formatted.
+  - TypeScript: 0 errors (`tsc --noEmit`).
+  - Vite build: passed (`dist/assets/index-*.js`).

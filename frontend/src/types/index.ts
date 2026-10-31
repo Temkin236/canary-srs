@@ -263,3 +263,82 @@ export interface InvestigationWorkspaceResponse {
   };
 }
 
+export interface HistogramBucket {
+  bucket: string;
+  min_val?: number;
+  max_val?: number;
+  count: number;
+  percentage: number;
+}
+
+export interface WorkerContribution {
+  worker_id: string;
+  answer_count: number;
+  percentage_of_total: number;
+}
+
+export interface QualityWarning {
+  code: string;
+  title: string;
+  message: string;
+  severity: 'critical' | 'warning' | 'info';
+  affected_records: number;
+}
+
+export interface AnswerLengthStats {
+  min_chars: number;
+  max_chars: number;
+  avg_chars: number;
+  median_chars: number;
+  min_words: number;
+  max_words: number;
+  avg_words: number;
+  median_words: number;
+  short_answers_count: number;
+  long_answers_count: number;
+}
+
+export interface WorkerParticipationStats {
+  min_answers: number;
+  max_answers: number;
+  avg_answers: number;
+  median_answers: number;
+  distribution_buckets: HistogramBucket[];
+  top_contributors: WorkerContribution[];
+}
+
+export interface TaskCoverageStats {
+  min_answers_per_task: number;
+  max_answers_per_task: number;
+  avg_answers_per_task: number;
+  coverage_buckets: HistogramBucket[];
+}
+
+export interface SubmissionTimeStats {
+  timestamps_present_count: number;
+  timestamps_missing_count: number;
+  timestamp_coverage_pct: number;
+  hourly_distribution: Record<string, number>;
+  avg_seconds_spent?: number;
+  median_seconds_spent?: number;
+}
+
+export interface DatasetQualityResponse {
+  audit_id: string;
+  dataset_name: string;
+  total_records: number;
+  unique_workers: number;
+  unique_tasks: number;
+  completeness_score: number;
+  empty_answers_count: number;
+  missing_worker_ids_count: number;
+  missing_timestamps_count: number;
+  duplicate_task_submissions_count: number;
+  duplicate_submissions_count: number;
+  length_stats: AnswerLengthStats;
+  length_distribution: HistogramBucket[];
+  worker_participation: WorkerParticipationStats;
+  task_coverage: TaskCoverageStats;
+  submission_time_analysis: SubmissionTimeStats;
+  warnings: QualityWarning[];
+}
