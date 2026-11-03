@@ -1,4 +1,4 @@
-# Canary SRS — Contamination Audit for Human-Written Datasets
+# Canary SRS — Contamination Audit  for Human-Written Datasets
 
 [![CI](https://github.com/Temkin236/canary-srs/actions/workflows/ci.yml/badge.svg)](https://github.com/Temkin236/canary-srs/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
