@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   ArrowLeft,
   ShieldCheck,
@@ -28,10 +28,13 @@ export const InvestigationPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [searchParams] = useSearchParams();
+  const validTabs = ['overview', 'findings', 'markers', 'duplicates', 'quality', 'history', 'privacy'];
+  const queryTab = searchParams.get('tab');
   // Tab State: overview | findings | markers | duplicates | quality | history | privacy
   const [activeTab, setActiveTab] = useState<
     'overview' | 'findings' | 'markers' | 'duplicates' | 'quality' | 'history' | 'privacy'
-  >('findings');
+  >(validTabs.includes(queryTab || '') ? (queryTab as any) : 'findings');
 
 
   // Findings Filters
