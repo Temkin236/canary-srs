@@ -3,7 +3,7 @@
 ## Responsible Disclosure
 If you discover a security vulnerability in Canary SRS, please report it via private disclosure rather than opening a public GitHub issue.
 
-Email security reports to: `temkinabdulmelik1@gmail.com`
+Email security reports to: `temkinabdulmelik@gmail.com`
 
 ## Security Principles & Invariants in Canary
 1. **Zero Secret Persistence**: API keys (e.g., Google Gemini keys) entered by users for audit-scoped external similarity checks are held only in-memory during job execution and are never stored in databases, logs, reports, or queue messages.
