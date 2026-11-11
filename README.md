@@ -4,7 +4,7 @@
 ### Contamination Audit for Human-Written Datasets
 
 [![CI Status](https://github.com/Temkin236/canary-srs/actions/workflows/ci.yml/badge.svg)](https://github.com/Temkin236/canary-srs/actions/workflows/ci.yml)
-[![Tests: 83 Passed](https://img.shields.io/badge/Tests-83%20Passed-10B981.svg)](docs/TESTING.md)
+[![Tests: 90 Passed](https://img.shields.io/badge/Tests-90%20Passed-10B981.svg)](docs/TESTING.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F59E0B.svg)](LICENSE)
 [![Python: 3.12+](https://img.shields.io/badge/Python-3.12%2B-3B82F6.svg)](https://www.python.org/)
 [![FastAPI: 0.115+](https://img.shields.io/badge/FastAPI-0.115%2B-009688.svg)](https://fastapi.tiangolo.com/)
