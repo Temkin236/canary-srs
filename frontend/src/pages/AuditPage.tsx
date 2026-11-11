@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UploadCloud, CheckCircle, ArrowRight } from 'lucide-react';
 import { ValidationResult } from '../types';
+import { apiUrl } from '../services/api';
 
 export const AuditPage: React.FC = () => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ export const AuditPage: React.FC = () => {
       const formData = new FormData();
       formData.append('file', selectedFile);
 
-      const res = await fetch('/api/v1/audits/validate', {
+      const res = await fetch(apiUrl('/api/v1/audits/validate'), {
         method: 'POST',
         body: formData,
       });
@@ -59,7 +60,7 @@ export const AuditPage: React.FC = () => {
       formData.append('file', file);
       formData.append('consent_external_ai', String(consentAi));
 
-      const res = await fetch('/api/v1/audits', {
+      const res = await fetch(apiUrl('/api/v1/audits'), {
         method: 'POST',
         body: formData,
       });

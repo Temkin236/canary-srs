@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { X, AlertTriangle, ArrowLeftRight, Loader2, Info } from 'lucide-react';
 import { SideBySideComparisonResponse } from '../../types';
+import { apiUrl } from '../../services/api';
 
 interface SideBySideComparisonModalProps {
   findingId: string | null;
@@ -21,7 +22,7 @@ export const SideBySideComparisonModal: React.FC<SideBySideComparisonModalProps>
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`/api/v1/findings/${findingId}/comparison`);
+        const res = await fetch(apiUrl(`/api/v1/findings/${findingId}/comparison`));
         if (!res.ok) throw new Error('Failed to load text comparison.');
         const result: SideBySideComparisonResponse = await res.json();
         setData(result);

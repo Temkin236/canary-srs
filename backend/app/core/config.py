@@ -1,6 +1,7 @@
 import os
-from typing import List
+from typing import List, Union
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -13,7 +14,7 @@ class Settings(BaseSettings):
     HOST: str = "0.0.0.0"
     PORT: int = 8000
     FRONTEND_URL: str = "http://localhost:5173"
-    ALLOWED_ORIGINS: List[str] = ["http://localhost:5173", "http://localhost:3000"]
+    ALLOWED_ORIGINS: Union[List[str], str] = ["http://localhost:5173", "http://localhost:3000"]
 
     DATABASE_URL: str = "sqlite:///./canary.db"
     REDIS_URL: str = "redis://localhost:6379/0"
@@ -28,6 +29,21 @@ class Settings(BaseSettings):
     AI_SPENDING_CAP_PER_AUDIT_USD: float = 5.00
 
     GEMINI_API_KEY: str = ""
+
+    @field_validator("ALLOWED_ORIGINS", mode="before")
+    @classmethod
+    def parse_allowed_origins(cls, v: object) -> object:
+        if isinstance(v, str):
+            v = v.strip()
+            if v.startswith("[") and v.endswith("]"):
+                try:
+                    import json
+
+                    return json.loads(v)
+                except Exception:
+                    pass
+            return [origin.strip() for origin in v.split(",") if origin.strip()]
+        return v
 
     model_config = SettingsConfigDict(
         env_file=".env",

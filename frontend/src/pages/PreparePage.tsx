@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Copy, Download, Plus, Trash2, Check, Shield, FileText } from 'lucide-react';
 import { PreparedTask } from '../types';
+import { apiUrl } from '../services/api';
 
 export const PreparePage: React.FC = () => {
   const [tasks, setTasks] = useState<Array<{ id: string; prompt: string }>>([
@@ -46,7 +47,7 @@ export const PreparePage: React.FC = () => {
         hiding_method: hidingMethod,
       };
 
-      const res = await fetch('/api/v1/prepare/markers', {
+      const res = await fetch(apiUrl('/api/v1/prepare/markers'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

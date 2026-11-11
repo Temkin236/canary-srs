@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Download, Trash2, Filter, AlertTriangle, CheckCircle2, Loader2 } from 'lucide-react';
 import { Finding, AuditSummary } from '../types';
+import { apiUrl } from '../services/api';
 
 export const ResultsPage: React.FC = () => {
   const { secret } = useParams<{ secret: string }>();
@@ -110,7 +111,7 @@ export const ResultsPage: React.FC = () => {
 
       try {
         // First check status
-        const statusRes = await fetch(`/api/v1/audits/${secret}/status`);
+        const statusRes = await fetch(apiUrl(`/api/v1/audits/${secret}/status`));
         if (!statusRes.ok) {
           // If not found in backend DB, fall back to synthetic
           setSummary(demoSummary);
@@ -130,7 +131,7 @@ export const ResultsPage: React.FC = () => {
         }
 
         // Audit finished: fetch full report
-        const repRes = await fetch(`/api/v1/audits/${secret}/report`);
+        const repRes = await fetch(apiUrl(`/api/v1/audits/${secret}/report`));
         if (repRes.ok) {
           const rep = await repRes.json();
           const mappedFindings: Finding[] = (rep.findings || []).map((f: any) => ({
@@ -203,7 +204,7 @@ export const ResultsPage: React.FC = () => {
     ) {
       if (secret && secret !== 'synthetic-demo-audit') {
         try {
-          await fetch(`/api/v1/audits/${secret}`, { method: 'DELETE' });
+          await fetch(apiUrl(`/api/v1/audits/${secret}`), { method: 'DELETE' });
         } catch {
           // ignore
         }
@@ -214,7 +215,7 @@ export const ResultsPage: React.FC = () => {
 
   const handleExport = (format: 'html' | 'csv' | 'json') => {
     if (secret && secret !== 'synthetic-demo-audit') {
-      window.open(`/api/v1/audits/${secret}/export.${format}`, '_blank');
+      window.open(apiUrl(`/api/v1/audits/${secret}/export.${format}`), '_blank');
       return;
     }
 
