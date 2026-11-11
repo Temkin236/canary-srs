@@ -1,0 +1,117 @@
+# Canary SRS — Render Production Blueprint
+# Complete infrastructure specification for Render Web Service, Worker, Cron, PostgreSQL, and Redis
+version: "1"
+
+databases:
+  - name: canary-postgres
+    databaseName: canary
+    user: canary_user
+    plan: starter
+    region: oregon
+    ipAllowList: [] # Private network access only
+
+services:
+  # 1. Background Queue: Render Key Value (Redis-compatible)
+  - type: redis
+    name: canary-redis
+    plan: starter
+    region: oregon
+    maxmemoryPolicy: noeviction
+    ipAllowList: [] # Private network access only
+
+  # 2. FastAPI Web Service: Public REST API & Health Probes
+  - type: web
+    name: canary-api
+    runtime: python
+    rootDir: backend
+    plan: starter
+    region: oregon
+    buildCommand: pip install uv && uv sync --frozen
+    preDeployCommand: uv run alembic upgrade head
+    startCommand: uv run uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health/ready
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: DEBUG
+        value: "false"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: canary-postgres
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: canary-redis
+          property: connectionString
+      - key: USE_IN_MEMORY_QUEUE
+        value: "false"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: STORAGE_PATH
+        value: /tmp/canary_storage
+      - key: DEFAULT_RETENTION_DAYS
+        value: "7"
+      - key: MAX_UPLOAD_SIZE_BYTES
+        value: "10485760"
+      - key: MAX_RECORDS_COUNT
+        value: "10000"
+      - key: ALLOWED_ORIGINS
+        sync: false # Set in Render Dashboard to your Vercel deployment URL (e.g. https://canary-srs.vercel.app)
+      - key: FRONTEND_URL
+        sync: false # Set in Render Dashboard to your Vercel deployment URL
+
+  # 3. Dedicated Background Worker: RQ Audit Execution Engine
+  - type: worker
+    name: canary-worker
+    runtime: python
+    rootDir: backend
+    plan: starter
+    region: oregon
+    buildCommand: pip install uv && uv sync --frozen
+    startCommand: uv run python -m app.worker
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: DEBUG
+        value: "false"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: canary-postgres
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: canary-redis
+          property: connectionString
+      - key: USE_IN_MEMORY_QUEUE
+        value: "false"
+      - key: SECRET_KEY
+        fromService:
+          type: web
+          name: canary-api
+          envVarKey: SECRET_KEY
+      - key: STORAGE_PATH
+        value: /tmp/canary_storage
+      - key: DEFAULT_RETENTION_DAYS
+        value: "7"
+
+  # 4. Scheduled Retention Cleanup: 7-Day Purge Cron Job (FR-42)
+  - type: cron
+    name: canary-retention-cleanup
+    runtime: python
+    rootDir: backend
+    schedule: "0 3 * * *" # Runs daily at 03:00 UTC
+    plan: starter
+    region: oregon
+    buildCommand: pip install uv && uv sync --frozen
+    startCommand: uv run python scripts/cleanup.py
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: canary-postgres
+          property: connectionString
+      - key: DEFAULT_RETENTION_DAYS
+        value: "7"

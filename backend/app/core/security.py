@@ -23,6 +23,11 @@ def hash_secret_token(raw_token: str) -> str:
     return hashlib.sha256(raw_token.strip().encode("utf-8")).hexdigest()
 
 
+def verify_secret_token(raw_token: str, token_hash: str) -> bool:
+    """Validates a raw secret token against a stored SHA-256 hash in constant time."""
+    return secrets.compare_digest(hash_secret_token(raw_token), token_hash)
+
+
 def sanitize_csv_field(val: str) -> str:
     """
     Prevents CSV Formula Injection (Spreadsheet Macro Injection).

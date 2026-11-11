@@ -13,6 +13,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { DatasetQualityResponse } from '../../types';
+import { apiUrl } from '../../services/api';
 
 interface DatasetQualityViewProps {
   auditId: string;
@@ -27,7 +28,7 @@ export const DatasetQualityView: React.FC<DatasetQualityViewProps> = ({ auditId 
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/v1/audits/${auditId}/quality`);
+      const res = await fetch(apiUrl(`/api/v1/audits/${auditId}/quality`));
       if (!res.ok) {
         throw new Error('Failed to load dataset quality analytics.');
       }
@@ -49,7 +50,7 @@ export const DatasetQualityView: React.FC<DatasetQualityViewProps> = ({ auditId 
   }, [auditId]);
 
   const handleExport = (format: 'csv' | 'json') => {
-    const url = `/api/v1/audits/${auditId}/quality/export?format=${format}`;
+    const url = apiUrl(`/api/v1/audits/${auditId}/quality/export?format=${format}`);
     const a = document.createElement('a');
     a.href = url;
     a.download = `canary_quality_${auditId.slice(0, 8)}.${format}`;

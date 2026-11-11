@@ -18,10 +18,20 @@ def health_check(db: Session = Depends(get_db)):
     except Exception:
         db_status = "unhealthy"
 
-    queue_status = "healthy"  # In-memory or Redis check
+    queue_status = "healthy"
+    if not settings.USE_IN_MEMORY_QUEUE or settings.ENVIRONMENT == "production":
+        try:
+            import redis
+
+            r = redis.from_url(settings.REDIS_URL, socket_timeout=2)
+            r.ping()
+        except Exception:
+            queue_status = "unhealthy"
+
+    is_healthy = db_status == "healthy" and queue_status == "healthy"
 
     return HealthResponse(
-        status="ok" if db_status == "healthy" else "degraded",
+        status="ok" if is_healthy else "degraded",
         version=settings.APP_VERSION,
         database=db_status,
         queue=queue_status,

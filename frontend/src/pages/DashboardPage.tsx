@@ -19,6 +19,7 @@ import {
   Database,
 } from 'lucide-react';
 import { DashboardStats, DashboardAuditsResponse } from '../types';
+import { apiUrl } from '../services/api';
 
 export const DashboardPage: React.FC = () => {
   const [stats, setStats] = useState<DashboardStats | null>(null);
@@ -36,7 +37,7 @@ export const DashboardPage: React.FC = () => {
 
   const fetchStats = async () => {
     try {
-      const res = await fetch('/api/v1/dashboard/stats');
+      const res = await fetch(apiUrl('/api/v1/dashboard/stats'));
       if (!res.ok) throw new Error('Failed to load dashboard statistics.');
       const data: DashboardStats = await res.json();
       setStats(data);
@@ -59,7 +60,7 @@ export const DashboardPage: React.FC = () => {
       if (searchTerm.trim()) params.append('search', searchTerm.trim());
       if (statusFilter !== 'all') params.append('status', statusFilter);
 
-      const res = await fetch(`/api/v1/dashboard/audits?${params.toString()}`);
+      const res = await fetch(apiUrl(`/api/v1/dashboard/audits?${params.toString()}`));
       if (!res.ok) throw new Error('Failed to load audits.');
       const data: DashboardAuditsResponse = await res.json();
       setAuditsResponse(data);
@@ -95,7 +96,7 @@ export const DashboardPage: React.FC = () => {
     const params = new URLSearchParams();
     if (searchTerm.trim()) params.append('search', searchTerm.trim());
     if (statusFilter !== 'all') params.append('status', statusFilter);
-    window.location.href = `/api/v1/dashboard/export?${params.toString()}`;
+    window.location.href = apiUrl(`/api/v1/dashboard/export?${params.toString()}`);
   };
 
   const handleSort = (column: string) => {

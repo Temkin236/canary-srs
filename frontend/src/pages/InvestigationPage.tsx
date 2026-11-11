@@ -19,6 +19,7 @@ import {
 import { SideBySideComparisonModal } from '../components/investigation/SideBySideComparisonModal';
 import { AdjudicationModal } from '../components/investigation/AdjudicationModal';
 import { DatasetQualityView } from '../components/investigation/DatasetQualityView';
+import { apiUrl } from '../services/api';
 
 export const InvestigationPage: React.FC = () => {
   const { auditId } = useParams<{ auditId: string }>();
@@ -54,7 +55,7 @@ export const InvestigationPage: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/v1/audits/${auditId}/investigate`);
+      const res = await fetch(apiUrl(`/api/v1/audits/${auditId}/investigate`));
       if (!res.ok) {
         throw new Error('Audit workspace not found or expired under the 7-day retention policy.');
       }
@@ -87,7 +88,7 @@ export const InvestigationPage: React.FC = () => {
     }
     setIsDeleting(true);
     try {
-      const res = await fetch(`/api/v1/audits/${data.audit.id}`, { method: 'DELETE' });
+      const res = await fetch(apiUrl(`/api/v1/audits/${data.audit.id}`), { method: 'DELETE' });
       if (res.ok) {
         setDeleted(true);
       } else {
@@ -187,7 +188,7 @@ export const InvestigationPage: React.FC = () => {
             Privacy & Purge
           </button>
           <a
-            href={`/api/v1/audits/${data?.audit.id}/export/csv`}
+            href={apiUrl(`/api/v1/audits/${data?.audit.id}/export/csv`)}
             download
             className="px-3 py-1.5 rounded bg-[#1C1917] text-[#FAF8F5] text-xs font-medium hover:bg-[#292524] transition-colors flex items-center gap-1.5 shadow-sm"
           >
