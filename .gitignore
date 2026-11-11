@@ -50,6 +50,7 @@ data/*
 !data/accuracy/
 data/accuracy/*
 !data/accuracy/latest_evaluation.json
+backend/data/
 
 # Environment files and credentials
 .env
