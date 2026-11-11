@@ -18,8 +18,8 @@ export const Navbar: React.FC = () => {
     <header className="sticky top-0 z-50 bg-[#FAF8F5]/90 backdrop-blur-md border-b border-[#E7E5E4]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded-full bg-[#1C1917] text-[#FAF8F5] flex items-center justify-center font-editorial font-bold text-lg shadow-sm group-hover:bg-[#B8860B] transition-colors">
-            C
+          <div className="w-9 h-9 rounded-full overflow-hidden bg-[#1C1917] flex items-center justify-center shadow-sm border border-[#E7E5E4] group-hover:border-[#B8860B] transition-all group-hover:scale-105">
+            <img src="/images/canary_audit_shield.jpg" alt="Canary Logo" className="w-full h-full object-cover scale-110" />
           </div>
           <div className="flex flex-col">
             <span className="font-editorial text-xl font-medium tracking-tight text-[#1C1917]">Canary</span>

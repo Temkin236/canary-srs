@@ -31,7 +31,14 @@ never an automated authorship judge or worker punishment mechanism.
 ## 📸 Overview & Interface Preview
 
 <div align="center">
-  <img src="docs/screenshots/05-reviewer-dashboard.png" alt="Canary SRS Enterprise Reviewer Dashboard" width="100%" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);" />
+  <img src="docs/assets/canary_hero_visual.jpg" alt="Canary AI Dataset Contamination Audit Platform" width="100%" style="border-radius: 12px; box-shadow: 0 6px 30px rgba(0,0,0,0.18);" />
+  <p><em>Canary SRS: Deterministic, privacy-first evidence collection and reviewer platform investigating chatbot contamination in human-written datasets.</em></p>
+</div>
+
+<br />
+
+<div align="center">
+  <img src="docs/screenshots/05-reviewer-dashboard.png" alt="Canary SRS Enterprise Reviewer Dashboard" width="100%" style="border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);" />
   <p><em>Enterprise Reviewer Workspace: Centralized analytics aggregating cross-audit findings, 14-day activity trends, check category distributions, and active dataset audits.</em></p>
 </div>
 
@@ -294,6 +301,8 @@ cd canary-srs
 make setup
 
 # 3. Launch backend and frontend concurrently
+npm run dev
+# or
 make dev
 ```
 

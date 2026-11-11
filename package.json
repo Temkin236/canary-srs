@@ -1,0 +1,13 @@
+{
+  "name": "canary-srs",
+  "version": "0.1.0",
+  "description": "Contamination Audit for Human-Written Datasets",
+  "scripts": {
+    "dev": "make dev",
+    "dev:backend": "cd backend && uv run uvicorn app.main:app --reload --port 8000",
+    "dev:frontend": "cd frontend && npm run dev",
+    "test": "make test",
+    "lint": "make lint",
+    "build": "make build"
+  }
+}
