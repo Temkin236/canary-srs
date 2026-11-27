@@ -39,10 +39,16 @@ Canary SRS (Contamination Audit for Human-Written Datasets) is a privacy-first e
 - **Formula Injection Defense**: Automatic single-quote prefix sanitization for CSV exports against spreadsheet macro attacks.
 - **Strict Privacy Invariant**: Zero worker data transmission to third-party AI APIs without explicit reviewer opt-in.
 
-### 5. Automated Verification & Quality
-- **83 Passing Automated Tests**: 63 backend pytest tests and 20 frontend vitest tests.
+### 5. Production Cloud Deployment Readiness
+- **Render Blueprint (`render.yaml`)**: Complete orchestration of 5 services (FastAPI Web Service, PostgreSQL 16, Redis Key-Value, dedicated RQ background worker, and daily retention cleanup cron).
+- **Alembic Database Migrations**: Full PostgreSQL & SQLite migration suite (`7d65e5339942_initial_canary_schema.py`) covering all 9 relational entities, cascading keys, and indexes.
+- **Fail-Closed Production Safety**: Enforces active Redis queue in production (blocks silent in-memory drop) and container probes (`/health/live`, `/health/ready`).
+- **Vercel SPA Configuration**: Catch-all SPA routing rewrites (`/(.*) -> /index.html`) and hardened security headers (`X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`).
+
+### 6. Automated Verification & Quality
+- **98 Passing Automated Tests**: 78 backend pytest tests (including 8 production readiness integration tests) and 20 frontend Vitest tests.
 - **Empirical Accuracy Benchmark**: Wilson score 95% confidence intervals (TPR: 100.0% [88.65%, 100.0%], FPR: 0.0% [0.00%, 8.76%]).
-- **Strict Type Safety**: TypeScript strict mode with zero compilation errors; Ruff formatting clean across all 62 backend files.
+- **Strict Type Safety & Linting**: TypeScript strict mode with zero compilation errors; Ruff formatting clean across all 67 backend files.
 
 ---
 
