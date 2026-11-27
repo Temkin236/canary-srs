@@ -40,6 +40,10 @@ def execute_audit_job(audit_id: str) -> None:
             logger.error("Audit %s not found in database", audit_id)
             return
 
+        if audit.status == "completed":
+            logger.info("Audit %s is already completed. Skipping duplicate execution.", audit_id)
+            return
+
         job_state = db.query(JobState).filter(JobState.audit_id == audit_id).first()
         if not job_state:
             job_state = JobState(

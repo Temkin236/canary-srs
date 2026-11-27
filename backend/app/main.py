@@ -54,6 +54,54 @@ async def global_exception_handler(request: Request, exc: Exception):
 app.include_router(api_v1_router)
 
 
+@app.get("/health/live")
+def liveness():
+    """Liveness probe: verifies process is responding."""
+    return {"status": "alive"}
+
+
+@app.get("/health/ready")
+def readiness():
+    """Readiness probe: verifies DB and Redis dependencies are operational."""
+    from sqlalchemy import text
+
+    db_healthy = True
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+    except Exception as e:
+        logger.warning(f"Readiness DB check failed: {e}")
+        db_healthy = False
+
+    queue_healthy = True
+    if not settings.USE_IN_MEMORY_QUEUE or settings.ENVIRONMENT == "production":
+        try:
+            import redis
+
+            r = redis.from_url(settings.REDIS_URL, socket_timeout=2)
+            r.ping()
+        except Exception as e:
+            logger.warning(f"Readiness Redis check failed: {e}")
+            queue_healthy = False
+
+    if not (db_healthy and queue_healthy):
+        return JSONResponse(
+            status_code=503,
+            content={
+                "status": "not_ready",
+                "database": "healthy" if db_healthy else "unhealthy",
+                "queue": "healthy" if queue_healthy else "unhealthy",
+            },
+        )
+
+    return {
+        "status": "ready",
+        "database": "healthy",
+        "queue": "healthy",
+        "version": settings.APP_VERSION,
+    }
+
+
 @app.get("/")
 def root():
     return {
@@ -61,4 +109,6 @@ def root():
         "version": settings.APP_VERSION,
         "docs_url": "/docs",
         "health_url": "/api/v1/health",
+        "readiness_url": "/health/ready",
+        "liveness_url": "/health/live",
     }

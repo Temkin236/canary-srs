@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { AlertCircle, CheckCircle2, Terminal } from 'lucide-react';
+import { apiUrl } from '../services/api';
 
 interface EvaluationArtifact {
   dataset_version: string;
@@ -31,7 +32,7 @@ export const AccuracyPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/v1/accuracy/latest')
+    fetch(apiUrl('/api/v1/accuracy/latest'))
       .then((res) => {
         if (!res.ok) throw new Error('Not available');
         return res.json();

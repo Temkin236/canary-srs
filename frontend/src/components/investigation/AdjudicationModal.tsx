@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, CheckCircle2, History, AlertCircle, ShieldAlert, Loader2 } from 'lucide-react';
 import { FindingDetailedItem, ReviewStatus } from '../../types';
+import { apiUrl } from '../../services/api';
 
 interface AdjudicationModalProps {
   finding: FindingDetailedItem | null;
@@ -31,7 +32,7 @@ export const AdjudicationModal: React.FC<AdjudicationModalProps> = ({
     setError(null);
 
     try {
-      const res = await fetch(`/api/v1/findings/${finding.id}/review`, {
+      const res = await fetch(apiUrl(`/api/v1/findings/${finding.id}/review`), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
