@@ -1,6 +1,6 @@
 {
   "name": "canary-srs",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Contamination Audit for Human-Written Datasets",
   "scripts": {
     "dev": "make dev",

@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = "development"
     DEBUG: bool = True
     APP_NAME: str = "Canary SRS"
-    APP_VERSION: str = "0.1.0"
+    APP_VERSION: str = "0.2.0"
 
     HOST: str = "0.0.0.0"
     PORT: int = 8000
