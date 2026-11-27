@@ -23,11 +23,21 @@ target_metadata = Base.metadata
 
 
 def get_url() -> str:
+    # 1. Direct environment variable (e.g. Render, Heroku, Docker, or CLI)
+    env_url = os.getenv("DATABASE_URL")
+    if env_url:
+        if env_url.startswith("postgres://"):
+            env_url = env_url.replace("postgres://", "postgresql://", 1)
+        return env_url
+
+    # 2. Config option if explicitly configured and not a placeholder
     cfg_url = config.get_main_option("sqlalchemy.url")
-    if cfg_url and "%(DATABASE_URL)s" not in cfg_url:
+    if cfg_url and "%(DATABASE_URL)s" not in cfg_url and not cfg_url.startswith("driver://"):
         if cfg_url.startswith("postgres://"):
             cfg_url = cfg_url.replace("postgres://", "postgresql://", 1)
         return cfg_url
+
+    # 3. App settings fallback
     return get_database_url()
 
 

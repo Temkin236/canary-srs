@@ -22,7 +22,7 @@ This document tracks the incremental professionalization and upgrade of the Cana
 | **Milestone 11** | Observability and Background Job Reliability | `feat/observability` | Pending | Planned | — |
 | **Milestone 12** | Performance Optimization and Load Testing | `feat/performance-optimization` | Pending | Planned | — |
 | **Milestone 13** | Automated End-to-End Testing & Documentation | `test/end-to-end-coverage` | Pending | Planned | — |
-| **Milestone 14** | Production Deployment and Release Verification | `chore/production-deployment` | Pending | Planned | — |
+| **Milestone 14** | Production Deployment and Release Verification | `chore/production-deployment-readiness` | PR #17 | **Completed** | 78 Backend / 20 Frontend |
 
 ---
 
@@ -113,6 +113,35 @@ This document tracks the incremental professionalization and upgrade of the Cana
 - **Verified Tests**:
   - Backend: 63 passed (3 new integration tests in `test_quality.py`).
   - Frontend: 20 passed (4 new quality tests in `Quality.test.tsx`).
+  - Ruff: 0 errors, 100% formatted.
+  - TypeScript: 0 errors (`tsc --noEmit`).
+  - Vite build: passed (`dist/assets/index-*.js`).
+
+---
+
+### Milestone 14: Production Deployment and Release Verification
+- **Status**: Completed
+- **Branch**: `chore/production-deployment-readiness`
+- **PR URL**: PR #17
+- **Files Modified/Created**:
+  - `render.yaml`: Production Render Blueprint orchestrating 5 cloud services: FastAPI web service (`canary-api`), PostgreSQL 16 database (`canary-postgres`), Redis Key-Value (`canary-redis`), dedicated background worker (`canary-worker`), and daily retention cleanup cron (`canary-retention-cleanup`).
+  - `backend/alembic.ini` & `backend/alembic/`: Complete Alembic migration setup with initial migration `7d65e5339942_initial_canary_schema.py` mapping all 9 tables, indexes, and cascading foreign keys.
+  - `backend/app/worker.py`: Production-grade RQ background worker listening on `canary-audits` queue with exponential backoff and graceful signal termination (`SIGTERM`, `SIGINT`).
+  - `backend/app/jobs/queue.py`: Fail-closed production queue safety (raises `RuntimeError` if Redis is down, preventing silent memory drops in production).
+  - `backend/app/main.py`: Container orchestration probes `/health/live` (liveness) and `/health/ready` (readiness with database connectivity check).
+  - `backend/app/core/security.py`: Added `verify_secret_token` constant-time verification using `hmac.compare_digest` to defend against timing attacks.
+  - `backend/app/db/session.py`: Configured production PostgreSQL connection pool (`pool_size=10`, `max_overflow=20`, `pool_recycle=1800`, `pool_pre_ping=True`) and `postgres://` to `postgresql://` URI normalization.
+  - `backend/scripts/cleanup.py`: Dedicated CLI script for daily 7-day retention purge cron job.
+  - `frontend/vercel.json`: Vercel SPA routing rules (catch-all rewrites) and hardened security headers (`X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`).
+  - `frontend/src/services/api.ts`: Dynamic `apiUrl` helper resolving `VITE_API_BASE_URL` in production while preserving Vite proxy in local development.
+  - `.ci/workflows/ci.yml`: Automated CI workflow specification for backend tests, linting, frontend tests, typecheck, and build.
+  - `docs/DEPLOYMENT_GUIDE.md`: Comprehensive step-by-step production setup guide for Render and Vercel.
+  - `docs/PRODUCTION_SECURITY_CHECKLIST.md`: Production security audit checklist and verification procedures.
+  - `backend/tests/integration/test_production_readiness.py`: 8 new integration tests verifying URL normalization, origins parsing, migrations on fresh DB, fail-closed queue, liveness/readiness probes, token hashing, cascading retention purge, and runner idempotency.
+- **Verified Tests**:
+  - Backend: 78 passed (including 8 new production readiness tests).
+  - Frontend: 20 passed.
+  - Total automated tests: 98 passed (100% pass rate).
   - Ruff: 0 errors, 100% formatted.
   - TypeScript: 0 errors (`tsc --noEmit`).
   - Vite build: passed (`dist/assets/index-*.js`).

@@ -9,10 +9,10 @@ Canary SRS employs automated test suites covering unit algorithms, system integr
 All tests are verified and passing locally and in CI:
 
 ```
-========================= 90 PASSED IN TOTAL =========================
-Backend Tests:   70 passed (55 unit, 9 integration, 6 security)
+========================= 98 PASSED IN TOTAL =========================
+Backend Tests:   78 passed (55 unit, 17 integration, 6 security)
 Frontend Tests:  20 passed (5 test suites)
-Code Formatting: Ruff clean (62 files formatted)
+Code Formatting: Ruff clean (67 files formatted)
 TypeScript:      0 errors (Strict Mode)
 Frontend Build:  Production bundle generated successfully
 ======================================================================
